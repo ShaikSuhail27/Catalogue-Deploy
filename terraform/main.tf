@@ -8,7 +8,7 @@ module "catalogue_Instance" {
    tags = merge(
     var.common_tags_u,
     {
-        Name = "${var.project_name_u}-${var.Environment}-catalogue"
+        Name = "${var.project_name_u}-${var.Environment}-catalogue AMI"
     }
     
   )
