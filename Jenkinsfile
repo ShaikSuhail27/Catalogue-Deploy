@@ -15,9 +15,7 @@ pipeline {
                 echo "version is ${params.version}"
             }
         }
-    }
 
-    stages {
         stage('init') {
             steps {
                 sh '''
