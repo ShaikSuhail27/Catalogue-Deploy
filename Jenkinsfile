@@ -1,4 +1,7 @@
 pipeline {
+    options{
+      ansiColor('xterm')
+    }
     agent { node { label 'Agent-1' } }
     parameters {
         string(name: 'version', defaultValue: '1.0.1', description: 'Which version need to deploy?')
@@ -10,6 +13,26 @@ pipeline {
             steps {
                 echo "Deployment"
                 echo "version is ${params.version}"
+            }
+        }
+    }
+
+    stages {
+        stage('init') {
+            steps {
+                sh '''
+                cd terraform
+                terraform init
+                '''
+        }
+    }
+        stage('plan') {
+            steps {
+                sh '''
+                cd terraform
+                terraform plan
+
+                '''
             }
         }
     }
