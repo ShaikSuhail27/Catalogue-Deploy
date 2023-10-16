@@ -42,6 +42,33 @@ resource "null_resource" "cluster" {
   }
 }
 
+# stopping the instance for taking the ami
+resource "aws_ec2_instance_state" "catalogue" {
+  instance_id = module.catalogue_Instance.id
+  state       = "stopped"
+}
+
+# need to take ami after stopping the instance
+resource "aws_ami_from_instance" "catalogue-Dev-Ami" {
+  name               = "${var.common_tags.component}-${local.date}"
+  source_instance_id = module.catalogue_Instance.id
+}
+#aws ec2 terminate-instances --instance-ids i-12345678
+resource "null_resource" "catalogue-delete" {
+  # Changes to any instance of the cluster requires re-provisioning
+  triggers = {
+    ami_id= aws_ami_from_instance.catalogue-Dev-Ami.id
+  }
+
+  provisioner "local-exec" {
+    # Bootstrap script called with private_ip of each node in the cluster
+    command  = [
+      "aws ec2 terminate-instances --instance-ids ${module.catalogue_Instance.id}"
+    ]
+  }
+}
+
+
 output "app_version"{
   value = var.app_version
 }
