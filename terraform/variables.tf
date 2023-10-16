@@ -14,3 +14,6 @@ variable "common_tags_u" {
 variable "Environment"{
     default="DEV"
 }
+variable "app_version" {
+  default = "100.1"
+}

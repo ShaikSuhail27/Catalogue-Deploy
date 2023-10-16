@@ -18,20 +18,19 @@ pipeline {
 
         stage('init') {
             steps {
-                sh '''
+                sh """
                 cd terraform
                 terraform init
-                '''
+                """
         }
     }
         stage('plan') {
             steps {
-                sh '''
+                sh """
                 cd terraform
-                terraform plan
-
-                '''
-            }
+                terraform plan -var ="app_version = ${params.version}"
+                """
+           }
         }
     }
 
