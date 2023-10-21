@@ -31,6 +31,6 @@ data "aws_ssm_parameter" "catalogue_sg_id" {
   name = "/${var.project_name_u}/${var.Environment}/catalogue_sg_id"
 }
 
-# data "aws_ssm_parameter" "app_alb_listener_arn" {
-#   name = "/${var.project_name_u}/${var.Environment}/vapp_alb_listener_arn"
-# }
+data "aws_ssm_parameter" "app_alb_listener_arn" {
+  name = "/${var.project_name_u}/${var.Environment}/vapp_alb_listener_arn"
+}
