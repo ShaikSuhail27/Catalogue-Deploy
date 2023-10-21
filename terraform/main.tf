@@ -74,6 +74,7 @@ resource "aws_lb_target_group" "catalogue" {
   port     = 8080
   protocol = "HTTP"
   vpc_id   = data.aws_ssm_parameter.vpc_id.value
+  deregistration_delay = 60
   health_check {
     enabled = true
     healthy_threshold = 2 # it will check the health whether it is good or not
@@ -108,7 +109,7 @@ resource "aws_launch_template" "Catalogue" {
 
 #auto_scaling group creation
 resource "aws_autoscaling_group" "Catalogue" {
-  name                      = "${var.project_name_u}-${var.common_tags_u.Component}-${var.Environment}"
+  name                      = "${var.project_name_u}-${var.common_tags_u.Component}-${var.Environment}-${local.date}"
   max_size                  = 5
   min_size                  = 2
   health_check_grace_period = 300
@@ -125,6 +126,10 @@ resource "aws_autoscaling_group" "Catalogue" {
     key                 = "Name"
     value               = "Catalogue"
     propagate_at_launch = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
   timeouts {
