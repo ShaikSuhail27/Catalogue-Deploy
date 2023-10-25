@@ -1,4 +1,4 @@
 locals {
-    date=formatdate(DD-MM-YYYY-hh-mm-ss, timestamp)
+    date=formatdate("YYYY-MM-DD-hh-mm", timestamp())
 }
 

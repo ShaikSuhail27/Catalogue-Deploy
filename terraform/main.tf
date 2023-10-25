@@ -46,12 +46,14 @@ resource "null_resource" "cluster" {
 resource "aws_ec2_instance_state" "catalogue" {
   instance_id = module.catalogue_Instance.id
   state       = "stopped"
+  depends_on = [null_resource.cluster]
 }
 
 # need to take ami after stopping the instance
 resource "aws_ami_from_instance" "catalogue-Dev-Ami" {
-  name               = "${var.common_tags.component}-${local.date}"
+  name               = "${var.common_tags_u.Component}-${local.date}"
   source_instance_id = module.catalogue_Instance.id
+  depends_on = [aws_ec2_instance_state.catalogue]
 }
 #aws ec2 terminate-instances --instance-ids i-12345678
 resource "null_resource" "catalogue-delete" {
@@ -62,10 +64,9 @@ resource "null_resource" "catalogue-delete" {
 
   provisioner "local-exec" {
     # Bootstrap script called with private_ip of each node in the cluster
-    command  = [
-      "aws ec2 terminate-instances --instance-ids ${module.catalogue_Instance.id}"
-    ]
+    command  = "aws ec2 terminate-instances --instance-ids ${module.catalogue_Instance.id}"
   }
+  depends_on = [aws_ami_from_instance.catalogue-Dev-Ami]
 }
 
 #catalogue target group
